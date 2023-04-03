@@ -1,37 +1,35 @@
-pipeline {
-    agent none
-    stages {
-	
-	stage('Non-Parallel Stage') {
-	    agent {
-                        label "master"
-                }
-        steps {
-                echo 'This stage will be executed first'
-                }
-        }
+pipeline{
+	agent none
+	stages{
+		stage('Non-Parallel Stage'){
+			agent{
+				label 'parallelNode'
+			}
+			steps{
+				echo "This stage will be executed first"	
+			}
+		}
 
-	
-        stage('Run Tests') {
-            parallel {
-                stage('Test On Windows') {
-                    agent {
-                        label "Windows_Node"
-                    }
-                    steps {
-                        echo "Task1 on Agent"
-                    }
-                    
-                }
-                stage('Test On Master') {
-                    agent {
-                        label "master"
-                    }
-                    steps {
-						echo "Task1 on Master"
+		stage('Run Tests'){
+			parallel{
+				stage('test on Windows'){
+					agent{
+						label 'jenkinsNode'
 					}
-                }
-            }
-        }
-    }
+					steps{
+						echo 'Task1 on Agent'
+					}
+				}
+				
+				stage('Test on arbaaz'){
+					agent{
+						label 'parallelNode'
+					}
+					steps{
+						echo ' Task1 on Agent2'
+					}
+				}
+			}
+		}	
+	}
 }
